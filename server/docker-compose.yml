@@ -5,10 +5,12 @@ services:
   server:
     build:
       context: .
-      dockerfile: ./server/Dockerfile
+      dockerfile: ./Dockerfile
     ports:
-      - "3000:3000"
+      - "3001:3000"
     depends_on:
+      - postgres
+    links:
       - postgres
 
   postgres:
@@ -25,6 +27,8 @@ services:
       interval: 5s
       timeout: 10s
       retries: 5
+    volumes:
+      - server-data:/var/lib/pgsql/data
 
   pgadmin: 
     image: dpage/pgadmin4
@@ -35,3 +39,6 @@ services:
       - "80:80"
     depends_on:
       - postgres
+  
+volumes:
+  server-data:
